@@ -1,8 +1,8 @@
-# pneumonia-diagnosis
+<h1 align="center">Pneumonia Diagnosis from Chest Ray</h1>
 
 ## AI in Healthcare
 
-AI in healthcare has huge scope and the impact you make in the world, too. Making a prototype to solve medical problems will always be a reason to be proud of. It’s unbelievable how AI is improving the healthcare field, specifically in medical diagnosis. AI will improve the way Doctors diagnose and treat diseases. It’s not a competition but an opportunity to join forces!This time, detecting Pneumonia in Chest X-Ray images, is a great experience. I will show you two ways to detect Pneumonia in Chest X-Rays: Using a Convolutional Neural Network with PyTorch (It’s my favorite!).
+AI in healthcare has a huge scope and the impact you can make in the world. Making a prototype to solve medical problems will always be a big motivation. It’s unbelievable how AI is improving the healthcare field, specifically in medical diagnosis. AI will improve the way doctors diagnose and treat diseases. It’s an opportunity to join forces! This time, detecting Pneumonia in Chest X-Ray images is a great experience. I will show you two approaches to detect Pneumonia in Chest X-Rays: Using a Convolutional Neural Network with PyTorch (It’s my favorite!).
 
 
 ## Problem Statement
@@ -11,12 +11,12 @@ The task is to predict if a person has pneumonia or not using Chest X-Ray.
 
 We will train a Convolutional Neural Network (CNN) that is able to detect whether a patient has pneumonia, both bacterial and viral, based on an X-ray image of their chest. We need to classify a patient as either having pneumonia or not having pneumonia. This is a binary classification problem.
 
+(Everything you need to recreate this project is in this [Jupyter notebook](https://colab.research.google.com/drive/1s_2Ti9kjtVqeAUiqDOM4XcCsCA9cAFaA?usp=sharing). Everything was coded in Google Colab, because of its GPU. The code to download the dataset is available in the notebook.)
 
 ## Kaggle dataset
 
-**Credits**: Kaggle (https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia)
+**Link**: https://www.kaggle.com/paultimothymooney/chest-xray-pneumonia
 
-Content
 The dataset is organized into 3 folders (train, test, validation) and contains subfolders for each image category (Pneumonia/Normal). There are 5,863 X-Ray images (JPEG) and 2 categories (Pneumonia/Normal).
 
 Chest X-ray images (anterior-posterior) were selected from retrospective cohorts of pediatric patients of one to five years old from Guangzhou Women and Children’s Medical Center, Guangzhou. All chest X-ray imaging was performed as part of patients’ routine clinical care.
@@ -24,25 +24,38 @@ Chest X-ray images (anterior-posterior) were selected from retrospective cohorts
 For the analysis of chest x-ray images, all chest radiographs were initially screened for quality control by removing all low quality or unreadable scans. The diagnoses for the images were then graded by two expert physicians before being cleared for training the AI system. In order to account for any grading errors, the evaluation set was also checked by a third expert.
 
 
-### Distribution of dataset
+## Distribution of dataset
 
-<img src="images/train_data_dist.png" align="left" height="320" width="296" alt="Main Screen">
-<img src="images/valid_data_dist.png" align="left" height="320" width="296">
-<img src="images/test_data_dist.png" align="left" height="320" width="296">
+The distribution of the datasets are as follows:
+
+**Train Dataset** (_Pneumonia - 3875, Normal - 1341_)  
+**Validation Dataset** (_Pneumonia - 8, Normal - 8_)  
+**Test Dataset** (_Pneumonia - 390, Normal - 234_)  
+
+<div align="center">
+  <img src="images/train_data_dist.png">
+  <img src="images/valid_data_dist.png">
+  <img src="images/test_data_dist.png">
+</div>
 
 
-### Chest X-ray Images
+## Chest X-ray Images
 
-The following are the illustrative examples of chest X-Rays in Patients with normal or pneumonia conditions.
+The following are the illustrative examples of chest x-Rays in patients with pneumonia and normal conditions.
 
-<img src="images/xray_images.png" align="center" alt="Main Screen">
+<div align="center">
+  <img src="images/xray_images.png">
+</div>
 
 
 ## Solution
 
-We will train a CNN from scratch and check the test accuracy. I have defined the following CNN architecture.
+The first approach was to train a CNN from scratch by arbitrarily selecting the convolution layers and fully connected layers and check the test accuracy. I have defined the following CNN architecture.
 
-<img src="images/cnn_scratch.png" align="center" alt="Main Screen">
+<div align="center">
+  <img src="images/cnn_scratch.png">
+</div>
+
 
 The first convolution layer will have a kernel size of 3 and stride 2, this will decrease the input image size by half. The second convolution layer will also have a kernel size of 3 and stride 2, which will decrease the input image size by half. The third convolution layer will have a kernel size of 3.
 
@@ -50,27 +63,36 @@ I have applied the max-pooling of stride 2 after each convolution layer to reduc
 
 Then, I have flattened the inputs and applied a dropout layer with probability as 0.3. Three fully connected layers are applied with Relu activation and dropout 0.3 to produce the final output that will predict the classes of a chest x-ray.
 
-We will use Cross-entropy loss to calculate the loss function and Adam optimizer.
+We will use **Cross-Entropy-Loss** to calculate the loss of a model with **Adam optimizer**.
 
-For this model, we achieved the **test accuracy** of **62% (390/624)**.
+For this model, we achieved the **test accuracy** of **62.5% (390/624)**.
 
-Now, we will use transfer learning using a DenseNet-169 pre-trained model to create a CNN that will greatly improve the test accuracy. And for this model, for training only 30 epochs, we were able to achieve **test accuracy** of **90% (564/624)**.
+The second approach was to use transfer learning with CNN using a pre-trained model. We will use the **DenseNet-169** model as it has good performance on Image classification. I have eventually added a final fully connected layer that will output the probabilities of both the classes (i.e. normal or pneumonia).
 
-
-The following are the illustrative examples of chest x-Rays predictions of patients with normal or pneumonia conditions.
-
-<img src="images/output.png" align="center" alt="Main Screen">
+When we train this model for only 30 epochs with a learning rate of 1e-3 (0.001), we were able to achieve **test accuracy** of **90.38% (564/624)**.
 
 
-The following is the training and validation loss of CNN initial model and the transfer learning CNN model.
+The following are the chest x-rays predictions of the DenseNet model with pneumonia conditions.
 
-<img src="images/loss_1.png" width="380" height="640" align="left" alt="Main Screen">
-<img src="images/loss_2.png" width="380" height="640" align="center">
+<div align="center">
+  <img src="images/output.png">
+</div>
 
 
-## Installation
+The following is the training and validation loss of both the models. (_Left - CNN Scratch, Right - CNN Transfer Learning_)
 
-Everything you need to recreate this project is on the jupyter notebook. Everything was coded in Google Colab, because of its GPU. The dataset was uploaded to Google Drive, so you can download it directly (the code to download it is in the notebook). For more details, the notebook includes the instructions to follow.
+![CNN Scratch](images/loss_1.png "CNN Scratch") ![CNN Transfer Learning](images/loss_2.png "CNN Transfer Learning")
+
+
+
+The following is the confusion matrix of both the models. (_Left - CNN Scratch, Right - CNN Transfer Learning_)
+
+![CNN Scratch](images/cm_1.png "CNN Scratch") ![CNN Transfer Learning](images/cm_2.png "CNN Transfer Learning")
+
+
+We can see that the initial CNN model tends to predict all the chest x-ray images as pneumonia. However, the accuracy is significantly increased using a pre-trained model.
+
+Through this project, we were able to see the concept of transfer learning, an effective method for object recognition. Instead of training a model from scratch, we can use existing architectures that have been trained on a large dataset and then tune them for our task. This reduces the time to train and often results in better overall performance. The outcome of this project is some knowledge of transfer learning and PyTorch that we can build on to build more complex applications.
 
 
 ## Contributing
