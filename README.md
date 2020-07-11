@@ -1,4 +1,4 @@
-<h1 align="center">Pneumonia Diagnosis from Chest Ray</h1>
+<h1 align="center">Pneumonia Diagnosis from Chest X-Ray</h1>
 
 ## AI in Healthcare
 
